@@ -108,7 +108,7 @@ var requestHandler = function (request, response) {
       response.end();
     }
   } else {
-    response.writeHead(404,headers);
+    response.writeHead(404, headers);
     response.end();
   }
 
