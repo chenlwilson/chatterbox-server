@@ -92,7 +92,6 @@ var requestHandler = function (request, response) {
         data += chunk;
       });
       request.on('end', function () {
-        console.log("DATA IS: " + data);
         var parsedData = JSON.parse(data);
         var textStr = parsedData.text;
         var newMessage = Object.assign(JSON.parse(data), { objectId: getIndexBelowMaxForKey(textStr, 10) }, { createdAt: Date() });
