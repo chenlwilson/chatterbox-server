@@ -1,24 +1,19 @@
 /*************************************************************
-
 You should implement your request handler function in this file.
-
 requestHandler is already getting passed to http.createServer()
 in basic-server.js, but it won't work as is.
-
 You'll have to figure out a way to export this function from
 this file and include it in basic-server.js so that it actually works.
-
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
-
 **************************************************************/
 var fs = require('fs');
 
 var defaultCorsHeaders = {
-  'access-control-allow-origin': null,
+  'access-control-allow-origin': '*',
   //'http://127.0.0.1:3000/classes/messages',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  //'access-control-allow-headers': 'content-type, accept',
-  'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+  'access-control-allow-headers': 'content-type, accept',
+  //'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
   'access-control-max-age': 10 // Seconds.
 };
 
@@ -64,26 +59,21 @@ var requestHandler = function (request, response) {
   // node to actually send all the data over to the client.
   //response.end(JSON.stringify('Hello, World!'));
 
-
-  var getIndexBelowMaxForKey = function (str, max) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-      hash = (hash << 5) + hash + str.charCodeAt(i);
-      hash = hash & hash; // Convert to 32bit integer
-      hash = Math.abs(hash);
-    }
-    return hash % max;
-  };
-
   //if request.method is GET
   if (request.url === '/classes/messages') {
     if (request.method === 'GET') {
       fs.readFile('./classes/messages/messages.txt', 'utf8', function(err, data) {
         //file:///Users/duncwa/duncwagit/rpt11/rpt11chatterboxserver/server/classes/messages/messages.txt
-        response.writeHead(200, headers);
-        //console.log('DATA output: ' + data);
-        data = JSON.parse('[' + data + ']');
-        response.end(JSON.stringify({results: data}));
+        // if (err) {
+        //   response.writeHead(404, headers);
+        //   response.end();
+        // } else {
+          //console.log('DATA output: ' + data);
+          data = JSON.parse('[' + data + ']');
+          //console.log('GET DATA IS: ' + data);
+          response.writeHead(200, headers);
+          response.end(JSON.stringify({results: data}));
+        //}
       });
       //{results: []}
       //{objectId: "39yFDtvEGC", username: "-", roomname: "lobby", text: "-", createdAt: "2018-12-03T00:24:07.325Z"}
