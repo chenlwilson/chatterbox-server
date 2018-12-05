@@ -78,10 +78,12 @@ var requestHandler = function (request, response) {
   //if request.method is GET
   if (request.url === '/classes/messages') {
     if (request.method === 'GET') {
-      debugger;
-      fs.readFile('./classes/messages/messages.txt', 'utf8', function(data) {
+      fs.readFile('./classes/messages/messages.txt', 'utf8', function(err, data) {
+        //file:///Users/duncwa/duncwagit/rpt11/rpt11chatterboxserver/server/classes/messages/messages.txt
         response.writeHead(200, headers);
-        response.end(data);
+        //console.log('DATA output: ' + data);
+        data = JSON.parse('[' + data + ']');
+        response.end(JSON.stringify({result: data}));
       });
       //{results: []}
       //{objectId: "39yFDtvEGC", username: "-", roomname: "lobby", text: "-", createdAt: "2018-12-03T00:24:07.325Z"}
