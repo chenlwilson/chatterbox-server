@@ -11,14 +11,16 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var fs = require('fs');
+
 var defaultCorsHeaders = {
-  'access-control-allow-origin': '*',
+  'access-control-allow-origin': null,
+  //'http://127.0.0.1:3000/classes/messages',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
+  //'access-control-allow-headers': 'content-type, accept',
+  'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
   'access-control-max-age': 10 // Seconds.
 };
-
-var messages = [];
 
 var requestHandler = function (request, response) {
   // Request and Response come from node's http module.
@@ -47,7 +49,7 @@ var requestHandler = function (request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -76,8 +78,11 @@ var requestHandler = function (request, response) {
   //if request.method is GET
   if (request.url === '/classes/messages') {
     if (request.method === 'GET') {
-      response.writeHead(200, headers);
-      response.end(JSON.stringify({ results: messages }));
+      debugger;
+      fs.readFile('./classes/messages/messages.txt', 'utf8', function(data) {
+        response.writeHead(200, headers);
+        response.end(data);
+      });
       //{results: []}
       //{objectId: "39yFDtvEGC", username: "-", roomname: "lobby", text: "-", createdAt: "2018-12-03T00:24:07.325Z"}
     } else if (request.method === 'POST') {
@@ -94,8 +99,10 @@ var requestHandler = function (request, response) {
       request.on('end', function () {
         var parsedData = JSON.parse(data);
         var textStr = parsedData.text;
-        var newMessage = Object.assign(JSON.parse(data), { objectId: getIndexBelowMaxForKey(textStr, 10) }, { createdAt: Date() });
-        messages.push(newMessage);
+        var newMessage = Object.assign(JSON.parse(data), { objectId: Math.floor(Math.random() * 1000000000) }, { createdAt: Date() });
+        fs.appendFile('./classes/messages/messages.txt', ',' + JSON.stringify(newMessage), 'utf8', function() {
+          console.log('added new message!');
+        });
         // somehow we need to write messages to the following directory
         // /classes/messages.txt
         //console.log("MESSAGES []: ", messages)
@@ -106,13 +113,17 @@ var requestHandler = function (request, response) {
       });
       response.writeHead(201, headers);
       response.end();
+    } else if (request.method === 'OPTIONS') {
+      //if request.method is OPTIONS
+      response.writeHead(200, headers);
+      response.end();
+    } else {
+      response.writeHead(404, headers);
+      response.end();
     }
-  } else {
-    response.writeHead(404, headers);
-    response.end();
   }
 
-  //if request.method is OPTIONS
+  
   //if request.method is anything else, respond with 405
 
 
