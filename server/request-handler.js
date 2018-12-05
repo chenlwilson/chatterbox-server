@@ -83,7 +83,7 @@ var requestHandler = function (request, response) {
         response.writeHead(200, headers);
         //console.log('DATA output: ' + data);
         data = JSON.parse('[' + data + ']');
-        response.end(JSON.stringify({result: data}));
+        response.end(JSON.stringify({results: data}));
       });
       //{results: []}
       //{objectId: "39yFDtvEGC", username: "-", roomname: "lobby", text: "-", createdAt: "2018-12-03T00:24:07.325Z"}
@@ -125,7 +125,7 @@ var requestHandler = function (request, response) {
     }
   }
 
-  
+
   //if request.method is anything else, respond with 405
 
 
