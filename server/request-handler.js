@@ -1,24 +1,20 @@
 /*************************************************************
-
 You should implement your request handler function in this file.
-
 requestHandler is already getting passed to http.createServer()
 in basic-server.js, but it won't work as is.
-
 You'll have to figure out a way to export this function from
 this file and include it in basic-server.js so that it actually works.
-
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
-
 **************************************************************/
 var fs = require('fs');
 var prependFile = require('prepend-file');
 
 var defaultCorsHeaders = {
-  'access-control-allow-origin': null,
+  'access-control-allow-origin': '*',
+  //'http://127.0.0.1:3000/classes/messages',
   'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  //'access-control-allow-headers': 'content-type, accept',
-  'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+  'access-control-allow-headers': 'content-type, accept',
+  //'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
   'access-control-max-age': 10 // Seconds.
 };
 
@@ -68,9 +64,17 @@ var requestHandler = function (request, response) {
   if (request.url === '/classes/messages') {
     if (request.method === 'GET') {
       fs.readFile('./classes/messages/messages.txt', 'utf8', function(err, data) {
-        response.writeHead(statusCode, headers);
-        data = JSON.parse('[' + data + ']');
-        response.end(JSON.stringify({results: data}));
+        //file:///Users/duncwa/duncwagit/rpt11/rpt11chatterboxserver/server/classes/messages/messages.txt
+        // if (err) {
+        //   response.writeHead(404, headers);
+        //   response.end();
+        // } else {
+          //console.log('DATA output: ' + data);
+          data = JSON.parse('[' + data + ']');
+          //console.log('GET DATA IS: ' + data);
+          response.writeHead(200, headers);
+          response.end(JSON.stringify({results: data}));
+        //}
       });
     } else if (request.method === 'POST') {
       //if request.method is POST
