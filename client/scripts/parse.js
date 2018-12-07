@@ -10,12 +10,12 @@ var Parse = {
       type: 'POST',
       data: JSON.stringify(message),
       contentType: 'application/json',
-      crossDomain: true,
-      headers: { 'Accept': 'application/json'},
+      // crossDomain: true,
+      // headers: { 'Accept': 'application/json'},
       success: successCB,
-      error: errorCB || function(error) {
-        console.error('chatterbox: Failed to send message', error);
-      }
+      // error: errorCB || function(error) {
+      //   console.error('chatterbox: Failed to send message', error);
+      // }
     });
   },
 

@@ -11,7 +11,7 @@ describe('Node Server Request Listener Function', function() {
 
     
     handler.requestHandler(req, res);
-
+    console.log("SERVER SPEC RESP: " + res._responseCode);
     expect(res._responseCode).to.equal(200);
     expect(res._ended).to.equal(true);
   });
